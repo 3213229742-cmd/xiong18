@@ -683,48 +683,61 @@ body:not(.blown) .sign-lock{margin-top:18px}
   html{scroll-behavior:auto}
 }
 
-/* ---------- 视频祝福 ---------- */
+/* ---------- 视频祝福：一列竖排，和上面「一段视频」同宽 ---------- */
 .video-sec + .video-sec{padding-top:clamp(30px,5vh,60px)}
 .br-pc{display:inline}
 @media (max-width:640px){.br-pc{display:none}}
 
 .bl-grid{
-  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:clamp(12px,1.6vw,20px);
-  width:min(1000px,100%);margin:clamp(26px,4vh,40px) auto 0;
+  display:flex;flex-direction:column;align-items:center;
+  gap:clamp(26px,4.4vh,46px);
+  width:min(420px,86vw);
+  margin:clamp(30px,5vh,50px) auto 0;
 }
-@media (max-width:980px){.bl-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media (max-width:760px){.bl-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 .bl-card{
-  position:relative;display:block;padding:0;border:0;border-radius:3px;
-  background:#171009;overflow:hidden;cursor:pointer;aspect-ratio:9/16;
-  box-shadow:0 18px 40px -22px rgba(40,24,14,.7),0 0 0 1px rgba(226,196,140,.2);
+  display:block;position:relative;width:100%;
+  padding:14px 0;
+  border:0;border-radius:4px;background:#171009;cursor:pointer;
+  box-shadow:
+    0 40px 90px -40px rgba(40,24,14,.75),
+    0 0 0 1px rgba(226,196,140,.22),
+    inset 0 0 0 1px rgba(0,0,0,.4);
   transition:transform .45s var(--ease),box-shadow .45s;
 }
-.bl-card:hover{transform:translateY(-4px);box-shadow:0 26px 52px -24px rgba(40,24,14,.85),0 0 0 1px rgba(226,196,140,.45)}
-.bl-card:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
-.bl-card .card-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#171009;display:block}
-.bl-card::after{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(180deg,rgba(20,14,9,0) 42%,rgba(20,14,9,.82) 100%);
+.bl-card:hover{transform:translateY(-3px)}
+.bl-card:focus-visible{outline:2px solid var(--gold);outline-offset:6px}
+.bl-card .card-video{
+  display:block;width:calc(100% - 28px);margin-inline:14px;
+  aspect-ratio:9/16;object-fit:contain;background:#171009;
 }
-.bl-card .card-meta{
-  position:absolute;left:12px;right:12px;bottom:11px;z-index:2;
-  display:flex;align-items:center;justify-content:space-between;gap:6px;
-  color:#F4E9D6;font-family:var(--sans-cn);
-}
-.bl-card .card-title{font-size:12.5px;letter-spacing:.14em;opacity:.92;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.bl-card .card-tag{
-  font-size:10px;letter-spacing:.1em;padding:2px 7px;border-radius:999px;
-  border:1px solid rgba(226,196,140,.5);color:#E2C48C;flex:0 0 auto;
-}
-.bl-card.is-main{outline:1px solid rgba(226,196,140,.45);outline-offset:2px}
-.bl-card.is-main .card-tag{background:var(--gold);border-color:var(--gold);color:#2B211B}
+/* 主视频：自己录的 73 秒，竖屏，但这一格不裁切，和兄弟们的一样宽 */
+.bl-card.card-main{aspect-ratio:auto}
+.bl-card.card-main .card-video{aspect-ratio:9/16}
 
-/* 主视频（我录的那段）稍微大一点占两格 */
-.bl-card.card-main{grid-column:span 2;aspect-ratio:16/9}
-.bl-card.card-main .card-video{object-fit:cover}
+/* 和「一段视频」一样的胶片齿孔 */
+.bl-card::before,.bl-card::after{
+  content:"";position:absolute;top:14px;bottom:14px;width:8px;z-index:2;
+  pointer-events:none;border-radius:999px;
+  background:
+    repeating-linear-gradient(180deg,rgba(244,235,221,.9) 0 5px,transparent 5px 14px);
+  opacity:.42;mix-blend-mode:soft-light;
+}
+.bl-card::before{left:4px}
+.bl-card::after{right:4px}
+
+.bl-card .card-cap{
+  display:block;margin-top:12px;
+  font-family:var(--sans-cn);font-size:11px;letter-spacing:.26em;
+  color:var(--ink-faint);text-align:center;
+}
+.bl-card .card-cap b{font-weight:400;color:var(--gold)}
+
+.bl-foot{
+  margin:clamp(26px,4vh,40px) 0 0;text-align:center;
+  font-family:var(--sans-cn);font-size:11.5px;letter-spacing:.3em;
+  color:var(--ink-faint);
+}
 
 /* 点开大图播放 */
 .bl-modal{
@@ -1653,19 +1666,13 @@ var DATA = {
       v.setAttribute("webkit-playsinline", "");
       v.src = b.src;
 
-      var meta = document.createElement("span");
-      meta.className = "card-meta";
-      var t = document.createElement("span");
-      t.className = "card-title";
-      t.textContent = b.title || ("祝福 " + (i + 1));
-      var tag = document.createElement("span");
-      tag.className = "card-tag";
-      tag.textContent = b.tag || "来自兄弟们";
-      meta.appendChild(t);
-      meta.appendChild(tag);
+      var cap = document.createElement("span");
+      cap.className = "card-cap";
+      var num = b.main ? "主视频" : ("祝福 " + ("0" + (i)).slice(-2));
+      cap.innerHTML = "<b>" + num + "</b> &nbsp;·&nbsp; " + (b.tag || "来自兄弟们");
 
       card.appendChild(v);
-      card.appendChild(meta);
+      card.appendChild(cap);
       card.addEventListener("click", function () { openBlessing(i); });
       blGrid.appendChild(card);
     });

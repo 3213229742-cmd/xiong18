@@ -889,6 +889,26 @@ body:not(.blown) .sign-lock{margin-top:18px}
 @keyframes giftCap{to{opacity:1}}
 .gift-reveal figcaption b{color:var(--red);font-weight:400}
 
+/* 在 Steam 里收下 */
+.gift-actions{margin-top:clamp(20px,3vh,30px);display:grid;justify-items:center;gap:10px}
+.steam-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  height:50px;padding:0 28px;border-radius:999px;cursor:pointer;
+  border:1px solid rgba(102,192,244,.42);
+  background:linear-gradient(160deg,#1b2838 0%,#2a475e 100%);
+  color:#c7d5e0;font-family:var(--sans-cn);font-size:14.5px;letter-spacing:.18em;text-indent:.18em;
+  box-shadow:0 16px 34px -18px rgba(27,40,56,.85);
+  transition:transform .3s var(--ease),box-shadow .3s,border-color .3s,color .3s;
+}
+.steam-btn:hover{transform:translateY(-2px);border-color:rgba(102,192,244,.9);color:#fff;box-shadow:0 22px 44px -18px rgba(27,40,56,.95)}
+.steam-btn:active{transform:translateY(0) scale(.985)}
+.steam-btn:focus-visible{outline:2px solid #66c0f4;outline-offset:4px}
+.steam-btn .steam-ico{color:#66c0f4;font-size:12px;line-height:1}
+.steam-note{
+  margin:0;font-family:var(--sans-cn);font-size:11px;letter-spacing:.08em;
+  color:var(--ink-faint);opacity:.85;text-align:center;
+}
+
 .bl-modal{
   position:fixed;inset:0;z-index:9600;display:flex;align-items:center;justify-content:center;
   background:rgba(14,10,7,.95);opacity:0;pointer-events:none;
@@ -922,7 +942,9 @@ body:not(.blown) .sign-lock{margin-top:18px}
 </style></noscript>
 
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<!-- build 20261117-8 -->
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<!-- build 20261117-6 -->
 </head>
 <body>
 
@@ -1219,6 +1241,13 @@ body:not(.blown) .sign-lock{margin-top:18px}
           <figcaption id="gift-cap">
             这是戚伯熊18岁生日礼物，愿你拿上这把大狙，打出康康本人的风采，<b>EDG战队不能没有康康！</b>
           </figcaption>
+          <div class="gift-actions">
+            <button class="steam-btn" id="gift-steam" type="button">
+              <span class="steam-ico" aria-hidden="true">▶</span>
+              <span class="steam-label">在 Steam 里收下</span>
+            </button>
+            <p class="steam-note">点了会尝试打开 Steam / CS2，没装 Steam 就跳商店页</p>
+          </div>
         </figure>
       </div>
     </section>
@@ -1849,6 +1878,31 @@ var DATA = {
     });
   }
 
+  /* 在 Steam 里收下：先试 steam:// 拉 CS2，没反应就跳商店页 */
+  var steamBtn = document.getElementById("gift-steam");
+  if (steamBtn) {
+    steamBtn.addEventListener("click", function () {
+      if (steamBtn.dataset.done) return;
+      steamBtn.dataset.done = "1";
+      var label = steamBtn.querySelector(".steam-label");
+      if (label) { try { label.textContent = "正在打开 Steam…"; } catch (e) {} }
+
+      try { window.location.href = "steam://rungameid/730"; } catch (e) {}
+
+      setTimeout(function () {
+        // 页面还在前台 → Steam 没接管，给个商店页兜底
+        var stillHere = document.visibilityState !== "hidden";
+        if (stillHere) {
+          try { window.open("https://store.steampowered.com/app/730/", "_blank"); } catch (e) {}
+        }
+        setTimeout(function () {
+          if (label) { try { label.textContent = "在 Steam 里收下"; } catch (e) {} }
+          delete steamBtn.dataset.done;
+        }, 1200);
+      }, 1500);
+    });
+  }
+
   /* ---------- 音乐：生日快乐（Web Audio 实时合成） ---------- */
   var musicBtn = document.getElementById("music");
   var ac = null, master = null, timer = null, playing = false;
@@ -2020,6 +2074,6 @@ var DATA = {
   if (reduce) document.querySelectorAll(".reveal-up").forEach(function (el) { el.classList.add("in"); });
 })();
 </script>
-<!-- build 20261117-8 -->
+<!-- build 20261117-6 -->
 </body>
 </html>

@@ -771,6 +771,11 @@ body:not(.blown) .sign-lock{margin-top:18px}
   body:not(.blown) .letter-body,body:not(.blown) .letter-sign{filter:none!important;opacity:1!important}
   .sign-lock{display:none!important}
 </style></noscript>
+
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<!-- build 20261117-2 -->
 </head>
 <body>
 
@@ -1457,7 +1462,7 @@ var DATA = {
         t.src = src;
       });
     }
-    var cands = ["media/birthday.mp4"];
+    var cands = ["media/birthday.mp4", "birthday.mp4", "media/video.mp4", "media/birthday.webm"];
     (function next(i) {
       if (i >= cands.length) return;
       trySrc(cands[i]).then(function (ok) {
@@ -1893,5 +1898,6 @@ var DATA = {
   if (reduce) document.querySelectorAll(".reveal-up").forEach(function (el) { el.classList.add("in"); });
 })();
 </script>
+<!-- build 20261117-2 -->
 </body>
 </html>

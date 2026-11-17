@@ -736,38 +736,46 @@ body:not(.blown) .sign-lock{margin-top:18px}
 .bl-card::before{left:4px}
 .bl-card::after{right:4px}
 
-/* 一块"场记板"：大编号 + 播放圈，不加载任何视频 */
+/* 封面 + 播放圈（不加载视频，只加载一张几十 KB 的封面） */
 .bl-slate{
-  position:relative;display:grid;place-content:center;justify-items:center;
+  position:relative;display:block;
   width:calc(100% - 28px);margin-inline:14px;
   aspect-ratio:9/16;
-  background:
-    radial-gradient(120% 90% at 50% 8%,rgba(226,196,140,.14) 0%,rgba(226,196,140,0) 62%),
-    repeating-linear-gradient(90deg,rgba(255,255,255,.026) 0 1px,transparent 1px 3px),
-    linear-gradient(165deg,#2C2118 0%,#1A120D 100%);
+  background:linear-gradient(165deg,#2C2118 0%,#1A120D 100%);
   overflow:hidden;
 }
-.bl-slate .slate-num{
-  font-family:var(--serif-en);font-weight:300;font-size:clamp(64px,15vw,104px);
-  line-height:.9;color:#F2E5D0;letter-spacing:.02em;opacity:.92;
+.bl-slate .slate-img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;display:block;
+  filter:saturate(.97) contrast(1.02) brightness(.96);
+  transition:transform .6s var(--ease);
 }
-.bl-slate .slate-word{
-  margin-top:10px;font-family:var(--sans-cn);font-size:11px;letter-spacing:.42em;
-  text-indent:.42em;color:rgba(226,196,140,.75);
+.bl-card:hover .slate-img{transform:scale(1.03)}
+.bl-slate .slate-shade{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(18,12,8,.34) 0%,rgba(18,12,8,0) 30%,rgba(18,12,8,0) 62%,rgba(18,12,8,.72) 100%);
+}
+.bl-slate .slate-num{
+  position:absolute;left:14px;top:12px;z-index:2;
+  font-family:var(--serif-en);font-weight:400;font-size:15px;letter-spacing:.18em;
+  color:rgba(242,229,208,.9);
+  text-shadow:0 1px 6px rgba(0,0,0,.55);
 }
 .bl-slate .play-ring{
-  position:absolute;left:50%;bottom:clamp(20px,4vh,34px);transform:translateX(-50%);
-  width:52px;height:52px;border-radius:50%;
-  border:1px solid rgba(226,196,140,.65);
-  display:grid;place-items:center;
-  background:rgba(23,16,9,.35);backdrop-filter:blur(3px);
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:56px;height:56px;border-radius:50%;
+  border:1px solid rgba(226,196,140,.75);
+  display:grid;place-items:center;z-index:2;
+  background:rgba(20,14,9,.42);backdrop-filter:blur(4px);
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
   transition:transform .4s var(--ease),background .4s,border-color .4s;
 }
 .bl-slate .play-ring::after{
-  content:"";width:0;height:0;border-left:14px solid #F2E5D0;
-  border-top:9px solid transparent;border-bottom:9px solid transparent;margin-left:4px;
+  content:"";width:0;height:0;border-left:15px solid #F6EDDD;
+  border-top:10px solid transparent;border-bottom:10px solid transparent;margin-left:4px;
 }
-.bl-card:hover .play-ring{transform:translateX(-50%) scale(1.08);background:rgba(226,196,140,.16);border-color:rgba(226,196,140,.9)}
+.bl-card:hover .play-ring{transform:translate(-50%,-50%) scale(1.1);background:rgba(226,196,140,.2);border-color:rgba(226,196,140,.95)}
 
 .bl-card .card-cap{
   display:block;margin-top:12px;
@@ -815,9 +823,7 @@ body:not(.blown) .sign-lock{margin-top:18px}
 </style></noscript>
 
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<!-- build 20261117-5 -->
+<!-- build 20261117-6 -->
 </head>
 <body>
 
@@ -1225,13 +1231,13 @@ var DATA = {
     { src: "media/photos/09-cream.jpg",  label: "奶油双杯",   cap: "奶油得很" }
   ],
 
-  /* 视频祝福：五段，平等并列。src 指向 media/ 下的文件 */
+  /* 视频祝福：五段，平等并列。poster 是封面图，src 是点开才加载的视频 */
   blessings: [
-    { src: "media/birthday.mp4", title: "祝福 01" },
-    { src: "media/blessings/blessing-01.mp4", title: "祝福 02" },
-    { src: "media/blessings/blessing-02.mp4", title: "祝福 03" },
-    { src: "media/blessings/blessing-03.mp4", title: "祝福 04" },
-    { src: "media/blessings/blessing-04.mp4", title: "祝福 05" }
+    { src: "media/birthday.mp4", poster: "media/posters/01.jpg", title: "祝福 01" },
+    { src: "media/blessings/blessing-01.mp4", poster: "media/posters/02.jpg", title: "祝福 02" },
+    { src: "media/blessings/blessing-02.mp4", poster: "media/posters/03.jpg", title: "祝福 03" },
+    { src: "media/blessings/blessing-03.mp4", poster: "media/posters/04.jpg", title: "祝福 04" },
+    { src: "media/blessings/blessing-04.mp4", poster: "media/posters/05.jpg", title: "祝福 05" }
   ]
 };
 
@@ -1597,13 +1603,20 @@ var DATA = {
       card.setAttribute("data-i", i);
       card.setAttribute("aria-label", "播放：" + (b.title || ("祝福 " + (i + 1))));
 
-      /* 只放一块场记板，不创建 video，页面加载不下载任何视频 */
+      /* 封面 + 播放圈，不创建 video，页面加载不下载视频 */
       var slate = document.createElement("span");
       slate.className = "bl-slate";
+      var img = document.createElement("img");
+      img.className = "slate-img";
+      img.src = b.poster || "";
+      img.alt = "";
+      img.loading = "lazy";
+      img.decoding = "async";
       slate.innerHTML =
         '<b class="slate-num">' + ("0" + (i + 1)).slice(-2) + "</b>" +
-        '<i class="slate-word">祝福</i>' +
+        '<span class="slate-shade" aria-hidden="true"></span>' +
         '<span class="play-ring" aria-hidden="true"></span>';
+      slate.insertBefore(img, slate.firstChild);
 
       var cap = document.createElement("span");
       cap.className = "card-cap";
@@ -1849,6 +1862,6 @@ var DATA = {
   if (reduce) document.querySelectorAll(".reveal-up").forEach(function (el) { el.classList.add("in"); });
 })();
 </script>
-<!-- build 20261117-5 -->
+<!-- build 20261117-6 -->
 </body>
 </html>

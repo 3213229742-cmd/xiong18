@@ -789,7 +789,126 @@ body:not(.blown) .sign-lock{margin-top:18px}
   color:var(--ink-faint);
 }
 
-/* 点开大图播放 */
+/* ---------- 礼物 ---------- */
+.gift{padding:clamp(40px,7vh,80px) 0 clamp(60px,9vh,100px);text-align:center}
+.gift-box{
+  position:relative;width:min(340px,84vw);margin:clamp(26px,4vh,42px) auto 0;
+  aspect-ratio:1.15/1;
+  cursor:pointer;
+  filter:drop-shadow(0 30px 50px rgba(60,32,18,.28));
+  transition:transform .5s var(--ease);
+}
+.gift-box:hover{transform:translateY(-4px) scale(1.01)}
+.gift-box:focus-visible{outline:2px solid var(--gold);outline-offset:10px}
+.gift-lid{
+  position:absolute;left:-4%;right:-4%;top:0;height:34%;
+  background:linear-gradient(165deg,#C4603F 0%,#B4492F 60%,#98361F 100%);
+  border-radius:4px 4px 2px 2px;
+  box-shadow:inset 0 2px 0 rgba(255,220,200,.35),0 6px 14px rgba(90,40,20,.25);
+  z-index:2;
+}
+.gift-lid::after{
+  content:"";position:absolute;left:0;right:0;top:14%;height:26%;
+  background:linear-gradient(180deg,rgba(255,240,220,.35),rgba(255,240,220,0));
+}
+.gift-body{
+  position:absolute;left:0;right:0;top:30%;bottom:0;
+  background:linear-gradient(170deg,#D9764F 0%,#C4603F 55%,#A64B2E 100%);
+  border-radius:3px;
+  box-shadow:inset 0 3px 0 rgba(255,220,200,.3);
+}
+/* 缎带 */
+.gift-body::before{
+  content:"";position:absolute;left:50%;top:0;bottom:0;width:16%;
+  transform:translateX(-50%);
+  background:linear-gradient(90deg,rgba(226,196,140,.55),rgba(240,214,170,.95),rgba(226,196,140,.55));
+  box-shadow:0 0 0 1px rgba(150,110,60,.25);
+}
+.gift-lid::before{
+  content:"";position:absolute;left:50%;top:0;bottom:0;width:16%;
+  transform:translateX(-50%);
+  background:linear-gradient(90deg,rgba(226,196,140,.5),rgba(240,214,170,.95),rgba(226,196,140,.5));
+  box-shadow:0 0 0 1px rgba(150,110,60,.2);
+}
+/* 蝴蝶结 */
+.gift-bow{
+  position:absolute;left:50%;top:-16%;transform:translateX(-50%);
+  width:46%;aspect-ratio:2.2/1;z-index:3;pointer-events:none;
+}
+.gift-bow::before,.gift-bow::after{
+  content:"";position:absolute;top:0;width:50%;height:100%;
+  background:radial-gradient(60% 60% at 30% 40%,#E2C48C,#B99358 70%,#9A7444);
+  border-radius:60% 60% 40% 40% / 70% 70% 30% 30%;
+  box-shadow:inset 0 -4px 8px rgba(120,80,40,.3);
+}
+.gift-bow::before{left:0;transform:rotate(-12deg)}
+.gift-bow::after{right:0;transform:rotate(12deg)}
+
+.gift-btn{
+  position:absolute;left:50%;bottom:12%;transform:translateX(-50%);
+  z-index:4;height:46px;padding:0 26px;
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid rgba(255,240,220,.5);border-radius:999px;
+  background:rgba(30,16,10,.42);color:#FFF6E8;
+  font-family:var(--serif-cn);font-size:14.5px;letter-spacing:.24em;text-indent:.24em;
+  cursor:pointer;backdrop-filter:blur(3px);
+  transition:background .3s,transform .3s,border-color .3s;
+}
+.gift-btn:hover{background:rgba(30,16,10,.72);border-color:rgba(255,240,220,.85);transform:translateX(-50%) translateY(-2px)}
+
+.gift-hint{
+  margin-top:20px;font-family:var(--sans-cn);font-size:11.5px;letter-spacing:.26em;
+  color:var(--ink-faint);
+}
+
+/* 拆开之后 */
+.gift-reveal{
+  display:none;width:min(900px,100%);margin:clamp(30px,5vh,50px) auto 0;
+}
+.gift.open .gift-box{display:none}
+.gift.open .gift-reveal{display:block}
+.gift.open .gift-hint{display:none}
+.gift-reveal img{
+  display:block;width:100%;height:auto;border-radius:3px;
+  border:1px solid rgba(226,196,140,.35);
+  box-shadow:0 40px 90px -40px rgba(30,14,8,.8);
+  animation:giftPop .9s var(--ease) both;
+  cursor:zoom-in;
+}
+@keyframes giftPop{
+  0%{opacity:0;transform:scale(.86) translateY(24px);filter:blur(6px)}
+  60%{opacity:1;transform:scale(1.02) translateY(0);filter:blur(0)}
+  100%{transform:scale(1)}
+}
+.gift-reveal figcaption{
+  margin:clamp(20px,3vh,30px) auto 0;max-width:30em;
+  font-size:clamp(15px,1.7vw,18.5px);line-height:2.15;letter-spacing:.06em;
+  color:var(--ink-soft);
+  opacity:0;animation:giftCap .9s var(--ease) .5s forwards;
+}
+@keyframes giftCap{to{opacity:1}}
+.gift-reveal figcaption b{color:var(--red);font-weight:400}
+
+/* 在 Steam 里收下 */
+.gift-actions{margin-top:clamp(20px,3vh,30px);display:grid;justify-items:center;gap:10px}
+.steam-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  height:50px;padding:0 28px;border-radius:999px;cursor:pointer;
+  border:1px solid rgba(102,192,244,.42);
+  background:linear-gradient(160deg,#1b2838 0%,#2a475e 100%);
+  color:#c7d5e0;font-family:var(--sans-cn);font-size:14.5px;letter-spacing:.18em;text-indent:.18em;
+  box-shadow:0 16px 34px -18px rgba(27,40,56,.85);
+  transition:transform .3s var(--ease),box-shadow .3s,border-color .3s,color .3s;
+}
+.steam-btn:hover{transform:translateY(-2px);border-color:rgba(102,192,244,.9);color:#fff;box-shadow:0 22px 44px -18px rgba(27,40,56,.95)}
+.steam-btn:active{transform:translateY(0) scale(.985)}
+.steam-btn:focus-visible{outline:2px solid #66c0f4;outline-offset:4px}
+.steam-btn .steam-ico{color:#66c0f4;font-size:12px;line-height:1}
+.steam-note{
+  margin:0;font-family:var(--sans-cn);font-size:11px;letter-spacing:.08em;
+  color:var(--ink-faint);opacity:.85;text-align:center;
+}
+
 .bl-modal{
   position:fixed;inset:0;z-index:9600;display:flex;align-items:center;justify-content:center;
   background:rgba(14,10,7,.95);opacity:0;pointer-events:none;
@@ -823,6 +942,8 @@ body:not(.blown) .sign-lock{margin-top:18px}
 </style></noscript>
 
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <!-- build 20261117-6 -->
 </head>
 <body>
@@ -1095,6 +1216,39 @@ body:not(.blown) .sign-lock{margin-top:18px}
         <div class="bl-grid" id="bl-grid"></div>
 
         <p class="bl-foot">未完待续</p>
+      </div>
+    </section>
+
+    <!-- ============ 礼物 ============ -->
+    <section class="gift" id="gift">
+      <div class="wrap">
+        <div class="media-head reveal-up">
+          <p class="eyebrow">One Last Thing</p>
+          <h2>最后，还有一份礼物</h2>
+        </div>
+
+        <div class="gift-box reveal-up" id="gift-box" role="button" tabindex="0" aria-label="拆开礼物">
+          <span class="gift-bow" aria-hidden="true"></span>
+          <span class="gift-lid" aria-hidden="true"></span>
+          <span class="gift-body" aria-hidden="true"></span>
+          <button class="gift-btn" id="gift-open" type="button">拆礼物</button>
+        </div>
+
+        <p class="gift-hint" id="gift-hint">点一下，拆开看看</p>
+
+        <figure class="gift-reveal" id="gift-reveal">
+          <img id="gift-img" src="media/gift/gift.jpg" alt="礼物：一把贴了新标签的大狙" loading="lazy">
+          <figcaption id="gift-cap">
+            这是戚伯熊18岁生日礼物，愿你拿上这把大狙，打出康康本人的风采，<b>EDG战队不能没有康康！</b>
+          </figcaption>
+          <div class="gift-actions">
+            <button class="steam-btn" id="gift-steam" type="button">
+              <span class="steam-ico" aria-hidden="true">▶</span>
+              <span class="steam-label">在 Steam 里收下</span>
+            </button>
+            <p class="steam-note">点了会尝试打开 Steam / CS2，没装 Steam 就跳商店页</p>
+          </div>
+        </figure>
       </div>
     </section>
 
@@ -1688,6 +1842,64 @@ var DATA = {
     });
     addEventListener("keydown", function (e) {
       if (blModal.classList.contains("open") && e.key === "Escape") closeBlessing();
+    });
+  }
+
+  /* ---------- 礼物 ---------- */
+  var giftSec = document.getElementById("gift");
+  var giftBox = document.getElementById("gift-box");
+  var giftBtn = document.getElementById("gift-open");
+  var giftImg = document.getElementById("gift-img");
+
+  function openGift() {
+    if (!giftSec || giftSec.classList.contains("open")) return;
+    giftSec.classList.add("open");
+    if (!reduce) {
+      burst(0.5, 0.52, 110);
+      setTimeout(function () { burst(0.24, 0.46, 55); }, 180);
+      setTimeout(function () { burst(0.76, 0.46, 55); }, 330);
+    }
+    setTimeout(function () {
+      var r = document.getElementById("gift-reveal");
+      if (r && r.scrollIntoView) r.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 260);
+  }
+
+  if (giftBox) {
+    giftBox.addEventListener("click", openGift);
+    giftBox.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openGift(); }
+    });
+  }
+  if (giftBtn) giftBtn.addEventListener("click", function (e) { e.stopPropagation(); openGift(); });
+  if (giftImg) {
+    giftImg.addEventListener("click", function () {
+      try { window.open(giftImg.src, "_blank"); } catch (e) {}
+    });
+  }
+
+  /* 在 Steam 里收下：先试 steam:// 拉 CS2，没反应就跳商店页 */
+  var steamBtn = document.getElementById("gift-steam");
+  if (steamBtn) {
+    steamBtn.addEventListener("click", function () {
+      if (steamBtn.dataset.done) return;
+      steamBtn.dataset.done = "1";
+      var label = steamBtn.querySelector(".steam-label");
+      if (label) { try { label.textContent = "正在打开 Steam…"; } catch (e) {} }
+
+      try { window.location.href = "steam://rungameid/730"; } catch (e) {}
+
+      setTimeout(function () {
+        // 页面还在前台 → Steam 没接管，给个商店页兜底
+        var stillHere = document.visibilityState !== "hidden";
+        if (stillHere) {
+          try { window.open("https://store.steampowered.com/app/730/", "_blank"); } catch (e) {}
+        }
+        setTimeout(function () {
+          if (label) { try { label.textContent = "在 Steam 里收下"; } catch (e) {} }
+          delete steamBtn.dataset.done;
+        }, 1200);
+      }, 1500);
     });
   }
 

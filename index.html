@@ -908,6 +908,16 @@ body:not(.blown) .sign-lock{margin-top:18px}
   margin:0;font-family:var(--sans-cn);font-size:11px;letter-spacing:.08em;
   color:var(--ink-faint);opacity:.85;text-align:center;
 }
+/* 已确认收下 */
+.steam-btn.done{
+  border-color:rgba(226,196,140,.75);
+  background:linear-gradient(160deg,#3E5B4A 0%,#2F4A3B 100%);
+  color:#F4E9D6;
+  cursor:default;
+  box-shadow:0 16px 34px -18px rgba(30,50,38,.9),inset 0 1px 0 rgba(255,255,255,.12);
+}
+.steam-btn.done:hover{transform:none;box-shadow:0 16px 34px -18px rgba(30,50,38,.9)}
+.steam-btn.done .steam-ico{color:#E2C48C}
 
 .bl-modal{
   position:fixed;inset:0;z-index:9600;display:flex;align-items:center;justify-content:center;
@@ -944,7 +954,7 @@ body:not(.blown) .sign-lock{margin-top:18px}
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- build 20261117-9 -->
+<!-- build 20261117-10 -->
 </head>
 <body>
 
@@ -1246,7 +1256,7 @@ body:not(.blown) .sign-lock{margin-top:18px}
               <span class="steam-ico" aria-hidden="true">▶</span>
               <span class="steam-label">在 Steam 里收下</span>
             </button>
-            <p class="steam-note">点了会尝试打开 Steam / CS2，没装 Steam 就跳商店页</p>
+            <p class="steam-note" id="steam-note">点一下确认收下，不会跳转到任何页面</p>
           </div>
         </figure>
       </div>
@@ -1369,7 +1379,10 @@ var DATA = {
     { t: "双人成行" },
     { t: "臭jb老熊冬眠了", hot: true },
     { t: "二实验七班", green: true },
-    { t: "MC乌托邦" }
+    { t: "MC乌托邦" },
+    { t: "康康", hot: true },
+    { t: "EDG", green: true },
+    { t: "五杀请你们吃肯德基", hot: true }
   ],
 
   /* 照片：把文件放进 media/photos/，这里改名字和说明就能换 */
@@ -1878,28 +1891,21 @@ var DATA = {
     });
   }
 
-  /* 在 Steam 里收下：先试 steam:// 拉 CS2，没反应就跳商店页 */
+  /* 「在 Steam 里收下」：只做确认，不跳转任何页面 */
   var steamBtn = document.getElementById("gift-steam");
   if (steamBtn) {
     steamBtn.addEventListener("click", function () {
-      if (steamBtn.dataset.done) return;
-      steamBtn.dataset.done = "1";
+      if (steamBtn.classList.contains("done")) return;
+      steamBtn.classList.add("done");
       var label = steamBtn.querySelector(".steam-label");
-      if (label) { try { label.textContent = "正在打开 Steam…"; } catch (e) {} }
-
-      try { window.location.href = "steam://rungameid/730"; } catch (e) {}
-
-      setTimeout(function () {
-        // 页面还在前台 → Steam 没接管，给个商店页兜底
-        var stillHere = document.visibilityState !== "hidden";
-        if (stillHere) {
-          try { window.open("https://store.steampowered.com/app/730/", "_blank"); } catch (e) {}
-        }
-        setTimeout(function () {
-          if (label) { try { label.textContent = "在 Steam 里收下"; } catch (e) {} }
-          delete steamBtn.dataset.done;
-        }, 1200);
-      }, 1500);
+      if (label) label.textContent = "已收下 · 等你上号";
+      var note = document.getElementById("steam-note");
+      if (note) note.textContent = "礼物记在账上了。这把大狙，等你自己去开出来。";
+      if (!reduce) {
+        burst(0.5, 0.62, 70);
+        setTimeout(function () { burst(0.3, 0.58, 40); }, 160);
+        setTimeout(function () { burst(0.7, 0.58, 40); }, 300);
+      }
     });
   }
 
@@ -2074,6 +2080,6 @@ var DATA = {
   if (reduce) document.querySelectorAll(".reveal-up").forEach(function (el) { el.classList.add("in"); });
 })();
 </script>
-<!-- build 20261117-9 -->
+<!-- build 20261117-10 -->
 </body>
 </html>

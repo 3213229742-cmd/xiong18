@@ -775,7 +775,7 @@ body:not(.blown) .sign-lock{margin-top:18px}
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- build 20261117-2 -->
+<!-- build 20261117-3 -->
 </head>
 <body>
 
@@ -1217,13 +1217,12 @@ var DATA = {
     { src: "media/photos/09-cream.jpg",  label: "奶油双杯",   cap: "奶油得很" }
   ],
 
-  /* 视频祝福：每段视频一个条目。src 指向 media/blessings/ 下的文件 */
+  /* 视频祝福：只放兄弟们录的（自己那段在上面「一段视频」里，这里不重复） */
   blessings: [
-    { src: "media/birthday.mp4", main: true, title: "第一段 · 我的", tag: "来自我" },
-    { src: "media/blessings/blessing-01.mp4", title: "祝福 01", tag: "来自兄弟们" },
-    { src: "media/blessings/blessing-02.mp4", title: "祝福 02", tag: "来自兄弟们" },
-    { src: "media/blessings/blessing-03.mp4", title: "祝福 03", tag: "来自兄弟们" },
-    { src: "media/blessings/blessing-04.mp4", title: "祝福 04", tag: "来自兄弟们" }
+    { src: "media/blessings/blessing-01.mp4", title: "祝福 01" },
+    { src: "media/blessings/blessing-02.mp4", title: "祝福 02" },
+    { src: "media/blessings/blessing-03.mp4", title: "祝福 03" },
+    { src: "media/blessings/blessing-04.mp4", title: "祝福 04" }
   ],
 
   /* 视频：放进 media/birthday.mp4 就自动出现。这里可以改说明 */
@@ -1657,7 +1656,7 @@ var DATA = {
     BLESSINGS.forEach(function (b, i) {
       var card = document.createElement("button");
       card.type = "button";
-      card.className = "bl-card" + (b.main ? " card-main is-main" : "");
+      card.className = "bl-card";
       card.setAttribute("data-i", i);
       card.setAttribute("aria-label", "播放：" + (b.title || ("祝福 " + (i + 1))));
 
@@ -1673,8 +1672,7 @@ var DATA = {
 
       var cap = document.createElement("span");
       cap.className = "card-cap";
-      var num = b.main ? "主视频" : ("祝福 " + ("0" + (i)).slice(-2));
-      cap.innerHTML = "<b>" + num + "</b> &nbsp;·&nbsp; " + (b.tag || "来自兄弟们");
+      cap.textContent = b.title || ("祝福 " + (i + 1));
 
       card.appendChild(v);
       card.appendChild(cap);
@@ -1696,7 +1694,7 @@ var DATA = {
     if (!b) return;
     blIdx = i;
     blVideo.src = b.src;
-    blCap.textContent = (b.title || ("祝福 " + (i + 1))) + "  ·  " + (b.tag || "来自兄弟们");
+    blCap.textContent = b.title || ("祝福 " + (i + 1));
     blModal.classList.add("open");
     blModal.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
@@ -1898,6 +1896,6 @@ var DATA = {
   if (reduce) document.querySelectorAll(".reveal-up").forEach(function (el) { el.classList.add("in"); });
 })();
 </script>
-<!-- build 20261117-2 -->
+<!-- build 20261117-3 -->
 </body>
 </html>
